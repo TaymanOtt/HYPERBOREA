@@ -7,49 +7,38 @@ const methodOverride = require('method-override');
 const path = require('path');
 const winston = require('winston');
 const morgan = require('morgan');
-const getUsers = require('./getUsers');
-const users = require('./users');
-const db = require('./db');
+const getUsers = require('./utils/getUsers');
+const pool = require('./utils/db');
+const pgSession = require('connect-pg-simple') (session);
 
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-//NEW STUFF
-const initializePassport = require('./passport-config')
-initializePassport(
-  passport,
-  email => users.find(user => user.email === email),
-  id => users.find(user => user.id === id)
-)
-app.use(session({
+const PORT = process.env.PORT || 3000; 
+
+
+require('./passport-config')
+
+app.use(
+  session({
+    store: new pgSession({
+      pool: pool,
+      tableName: 'user_sessions'
+    }),
   secret: process.env.SESSION_SECRET,
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 30 * 24 * 60 * 60 * 1000
+  }
 }))
 app.use(passport.initialize())
 app.use(passport.session())
-//const users = []
-/** 
-//Functions to retrieve and add users from/to database. Consider revision
-async function pushUsers(){
-  const tempUser = await getUsers();
-  console.log(tempUser);
-  users.splice(0, users.length);
-  tempUser.forEach(user => users.push(user));
-  //console.log(users);
-  }
-  
-  pushUsers();
+const users = []
 
-async function addUser(id, name, email, password){
-    await sendUser(id, name, email, password);
-      const tempUser = await getUsers();
-      users.splice(0, users.length)
-    tempUser.forEach(user => users.push(user));  
-    //console.log(users);
-  }
-*/
+
+
 app.set('view engine', 'ejs');
 
 app.set('views', path.join(__dirname, 'views'));

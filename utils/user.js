@@ -1,6 +1,6 @@
 // models/user.js
-const pool = require('db');
-const bcrypt = require('bcryptjs');
+const pool = require('pg');
+const bcrypt = require('bcrypt');
 
 const User = {
   async findByEmail(email) {
