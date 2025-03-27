@@ -8,6 +8,9 @@ const path = require('path');
 const winston = require('winston');
 const morgan = require('morgan');
 const getUsers = require('./getUsers');
+const users = require('./users');
+const db = require('./db');
+
 require('dotenv').config();
 
 const app = express();
@@ -26,9 +29,9 @@ app.use(session({
 }))
 app.use(passport.initialize())
 app.use(passport.session())
-const users = []
-
-//CRUD FUNCTIONS NEED REFACTORING
+//const users = []
+/** 
+//Functions to retrieve and add users from/to database. Consider revision
 async function pushUsers(){
   const tempUser = await getUsers();
   console.log(tempUser);
@@ -44,14 +47,9 @@ async function addUser(id, name, email, password){
       const tempUser = await getUsers();
       users.splice(0, users.length)
     tempUser.forEach(user => users.push(user));  
-    console.log(users);
+    //console.log(users);
   }
-//prevents repeat email from being added
-
-  
-
-    
-
+*/
 app.set('view engine', 'ejs');
 
 app.set('views', path.join(__dirname, 'views'));

@@ -13,3 +13,4 @@ function isValid(string){
     }
       return !hasBadChars;
   }
+  module.exports = isValid

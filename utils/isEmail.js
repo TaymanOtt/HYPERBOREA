@@ -22,3 +22,4 @@ function isEmail(email){
     }
     return false;
     }
+    module.exports = isEmail

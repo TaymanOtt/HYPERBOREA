@@ -8,3 +8,4 @@ function doesEmailExist(email){
     })
         return check;
     }
+    module.exports = doesEmailExist
